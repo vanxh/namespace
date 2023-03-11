@@ -28,9 +28,6 @@
     ],
     "*.json": [
       "prettier --write"
-    ],
-    "packages/prisma/schema.prisma": [
-      "prisma format"
     ]
   },
   "engines": {
