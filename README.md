@@ -1,2 +1,1 @@
-# namespace
-.app and .dev minting
+# Meroku Namespace
