@@ -1,12 +1,12 @@
 import { Input, Button } from "ui";
 
-import { NavbarHomepage } from "@/components/Navbar";
+import { NavbarApp } from "@/components/Navbar";
 import Spacer from "@/components/Spacer";
 
 export default function Page() {
   return (
     <>
-      <NavbarHomepage />
+      <NavbarApp />
       <Spacer />
 
       <div className="flex flex-col items-center justify-center max-w-[95%] md:max-w-[80%] lg:max-w-[50%] text-left md:text-center gap-y-4 md:gap-y-12">
