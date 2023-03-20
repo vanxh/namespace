@@ -6,7 +6,7 @@ var file = require("./config.json");
 
 async function main() {
   const AppNFT = await ethers.getContractFactory("AppNFTUpgradeable");
-  const appNFT = await upgrades.deployProxy(AppNFT, [file.DevNFTUpgradeable]);
+  const appNFT = await upgrades.deployProxy(AppNFT, [file.DevNFTUpgradeable, file.DappNameList]);
   await appNFT.deployed();
   console.log("AppNFT deployed to:", appNFT.address);
   file.AppNFTUpgradeable = appNFT.address;
@@ -16,5 +16,6 @@ async function main() {
       console.log('writing to ' + fileName);
     });
 }
+
 
 main();

@@ -30,7 +30,10 @@ describe(".app & .dev NFT minting", function () {
       otherAccount: "otherAccountDevName"
     }
     const dev_uri = ".devNFT.com"
-
+    const specialdAppNames = ["uniswap", "curve", "sushiswap"];
+    const DappNameList = await ethers.getContractFactory("dappNameList");
+    const dappNameList = await DappNameList.deploy();
+    await dappNameList.setDappNames(specialdAppNames);
     const DevNFT = await ethers.getContractFactory("DevNFTUpgradeable");
     const devNFT = await upgrades.deployProxy(DevNFT);
     const appName = {
@@ -42,10 +45,10 @@ describe(".app & .dev NFT minting", function () {
     const app_uri = ".appNFT.com"
 
     const AppNFT = await ethers.getContractFactory("AppNFTUpgradeable");
-    const appNFT = await upgrades.deployProxy(AppNFT, [devNFT.address]);
+    const appNFT = await upgrades.deployProxy(AppNFT, [devNFT.address, dappNameList.address]);
     // const devNFT = await DevNFT.deploy();
 
-    return { devNFT, appNFT, symbolOfDevNFT, symbolOfAppNFT, nameOfDevNFT, nameOfAppNFT, owner, account1, account2, otherAccount, devName, appName, dev_uri, app_uri };
+    return { devNFT, appNFT, dappNameList, symbolOfDevNFT, symbolOfAppNFT, nameOfDevNFT, nameOfAppNFT, owner, account1, account2, otherAccount, devName, appName, dev_uri, app_uri, specialdAppNames };
   }
 
   async function basicMintDone(devNFT, appNFT, dev_uri, app_uri, devName, appName) {
@@ -66,7 +69,7 @@ describe(".app & .dev NFT minting", function () {
       expect(await devNFT.symbol()).to.equal(symbolOfDevNFT);
     });
 
-    it("Should set the right owner", async function () {
+    it("Should set the right owner of devNFT", async function () {
       const { devNFT, owner } = await loadFixture(deployNFTsFixture);
 
       expect(await devNFT.owner()).to.equal(owner.address);
@@ -79,10 +82,16 @@ describe(".app & .dev NFT minting", function () {
       expect(await appNFT.symbol()).to.equal(nameOfAppNFT);
     });
 
-    it("Should set the right owner", async function () {
+    it("Should set the right owner appNFT", async function () {
       const { appNFT, owner } = await loadFixture(deployNFTsFixture);
 
       expect(await appNFT.owner()).to.equal(owner.address);
+    });
+
+    it("Should set the right owner dappNameList", async function () {
+      const { dappNameList, owner } = await loadFixture(deployNFTsFixture);
+
+      expect(await dappNameList.owner()).to.equal(owner.address);
     });
   });
 
@@ -256,6 +265,33 @@ describe(".app & .dev NFT minting", function () {
         // const tokenID = await appNFT.tokenIdForAppName("");
         expect(await appNFT.tokensAppName(3)).to.equal("XX");
       });
+
+      it("Should revert when the appName's blacklisted ie present in dappNameList", async function () {
+        const { devNFT, appNFT, dappNameList, owner, otherAccount, devName, appName, dev_uri, app_uri, specialdAppNames } = await loadFixture(
+          deployNFTsFixture
+        );
+
+        await devNFT.connect(otherAccount).safeMintDevNFT(otherAccount.address, devName.otherAccount+dev_uri, devName.otherAccount);
+
+        await expect(appNFT.connect(otherAccount).safeMintAppNFT(otherAccount.address, appName.otherAccount+app_uri, specialdAppNames[1])).to.be.revertedWith(
+          "App name reserved"
+        );
+      });
+
+      it("Should'nt fail when user mints special appNames when mintSpecialFlag is turned off by owner", async function () {
+        const { devNFT, appNFT, owner, otherAccount, devName, appName, dev_uri, app_uri, specialdAppNames } = await loadFixture(
+          deployNFTsFixture
+        );
+
+        await basicMintDone(devNFT, appNFT, dev_uri, app_uri, devName, appName);
+        await devNFT.connect(otherAccount).safeMintDevNFT(otherAccount.address, devName.otherAccount+dev_uri, devName.otherAccount);
+
+        await appNFT.setCheckDappNamesListFlag(false);
+        await expect(appNFT.connect(otherAccount).safeMintAppNFT(otherAccount.address, appName.otherAccount+app_uri, specialdAppNames[1])).not.to.be.reverted;
+        // const tokenID = await appNFT.tokenIdForAppName("");
+        expect(await appNFT.tokensAppName(3)).to.equal(specialdAppNames[1]);
+      });
+
     })
 
     describe("Events", function () {

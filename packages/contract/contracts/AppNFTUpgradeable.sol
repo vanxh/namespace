@@ -15,6 +15,10 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 
+interface IDappNameList {
+    function isAppNameAvailable(string memory appName) external view returns (bool);
+}
+
 contract AppNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721EnumerableUpgradeable, 
                     ERC721URIStorageUpgradeable, PausableUpgradeable, OwnableUpgradeable, 
                         ERC721BurnableUpgradeable, UUPSUpgradeable, ERC721APPStorageUpgradeable {
@@ -26,6 +30,7 @@ contract AppNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721Enumerable
     // flag to prevent specific app name length
     bool public mintSpecialFlag;
     bool public mintManyFlag;
+    bool public checkDappNamesListFlag;
     mapping(uint256 => uint256) public priceOf;
     mapping(uint256 => bool) public onSale;
 
@@ -33,12 +38,13 @@ contract AppNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721Enumerable
     //     return "ipfs://";
     // }
     IERC721Upgradeable public devNFTAddress;
+    IDappNameList public dappNameListAddress;
 
     /// @custom:oz-upgrades-unsafe-allow constructor    
     constructor() {
         _disableInitializers();
     }
-    function initialize(address devNFTAddress_) initializer public {
+    function initialize(address devNFTAddress_, address dappNameListAddress_) initializer public {
         __ERC721_init("appNFT", "appNFT");
         __ERC721Enumerable_init();
         __ERC721URIStorage_init();
@@ -49,6 +55,8 @@ contract AppNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721Enumerable
 
         fees = 2000000000; //2Gwei = 2%;
         devNFTAddress = IERC721Upgradeable(devNFTAddress_);
+        dappNameListAddress = IDappNameList(dappNameListAddress_);
+        checkDappNamesListFlag=true;
         _tokenIdCounter.increment();//because we want it to start NFT list index from 1 & not 0
     }
 
@@ -66,7 +74,7 @@ contract AppNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721Enumerable
         }
         
         if (bytes(appName).length < 4) {
-            require(mintSpecialFlag, "Minting of such names is restricted currently");
+            require(mintSpecialFlag, "Minting of this name is restricted currently");
         }
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
@@ -81,6 +89,9 @@ contract AppNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721Enumerable
 
         if(!mintManyFlag){
             require(balanceOf(to)==0, "provided wallet already used to create app");
+        }
+        if(checkDappNamesListFlag){
+            require(!dappNameListAddress.isAppNameAvailable(appName), "App name reserved");
         }
         if (bytes(appName).length < 4) {
             require(mintSpecialFlag, "Minting of such names is restricted currently");
@@ -122,6 +133,9 @@ contract AppNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721Enumerable
     }
     function setMintManyFlag(bool _mintManyFlag) external onlyOwner {
         mintManyFlag = _mintManyFlag;
+    }
+    function setCheckDappNamesListFlag(bool _checkDappNamesListFlag) external onlyOwner {
+        checkDappNamesListFlag = _checkDappNamesListFlag;
     }
 
     function feesWithdraw(address payable _to) external onlyOwner{

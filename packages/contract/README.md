@@ -2,17 +2,22 @@
 - Using @openzeppelin/contracts & @openzeppelin/contracts-upgradeable for standard libraries for Context, Strings, ERC721, ERC721Enumerable
 
 add pvt key in .env file, for onchain deployments
+add reservedDappNames in ./scripts/reservedDappNames.json
 
 Current deployments are configured for mumbai(Polygon)
 ```shel
-npm run deployDevProxy  //to deploy .devNFT contract
-npm run deployAppProxy  //to deploy .appNFT contract
+npm run deployDappNameList  //to deploy .dappNameList contract
+npm run deployDevProxy      //to deploy .devNFT contract
+npm run deployAppProxy      //to deploy .appNFT contract
 
-npm run verifyDI        //to verify .devNFT contract
-npm run verifyAI        //to verify .appNFT contract
+npm run verifyDappNameList  //to verify .dappNameList contract
+npm run verifyDI            //to verify .devNFT contract
+npm run verifyAI            //to verify .appNFT contract
 
-npx hardhat compile     //to compile NFT contracts
-npx hardhat test        //to test NFT contracts
+npm run addDappNames        //to add reserved dappNames in the list to avoid their minting in .appNFT
+
+npx hardhat compile         //to compile NFT contracts
+npx hardhat test            //to test NFT contracts
 
 ```
 

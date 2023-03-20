@@ -12,7 +12,10 @@
     "verify": "hardhat run scripts/verify.js --network mumbai",
     "verifyAI": "hardhat run scripts/verifyAppImplementation.js --network mumbai",
     "deployDevProxy": "hardhat run scripts/deployDevProxy.js --network mumbai",
-    "verifyDI": "hardhat run scripts/verifyDevImplementation.js --network mumbai"
+    "verifyDI": "hardhat run scripts/verifyDevImplementation.js --network mumbai",
+    "deployDappNameList": "hardhat run scripts/deployDappNameList.js --network mumbai",
+    "verifyDappNameList": "hardhat run scripts/verifyDappNameList.js --network mumbai",
+    "addDappNames": "hardhat run scripts/addDappNames.js --network mumbai"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.2",
