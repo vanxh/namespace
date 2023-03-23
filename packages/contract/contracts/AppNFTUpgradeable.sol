@@ -27,7 +27,8 @@ contract AppNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721Enumerable
     CountersUpgradeable.Counter private _tokenIdCounter;
     event AppNameSet(address indexed owner, uint256 indexed tokenId, string appName, string uri);
     event PriceSet(uint256 indexed tokenId, uint256 price);
-    uint128 public fees; //TODO: change to compatible fees
+    
+    uint128 public fees;    // fees in Gwei
     // flag to prevent specific app name length
     bool public mintSpecialFlag;
     bool public mintManyFlag;
@@ -35,9 +36,7 @@ contract AppNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721Enumerable
     mapping(uint256 => uint256) public priceOf;
     mapping(uint256 => bool) public onSale;
 
-    // function _baseURI() internal pure override returns (string memory) {
-    //     return "ipfs://";
-    // }
+
     IERC721Upgradeable public devNFTAddress;
     IDappNameList public dappNameListAddress;
 
@@ -70,7 +69,7 @@ contract AppNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721Enumerable
         _unpause();
     }
 
-    function safeMint(address to, string memory uri, string memory appName) public onlyOwner {
+    function safeMint(address to, string memory uri, string calldata appName) public onlyOwner {
         if(!mintManyFlag){
             require(balanceOf(to)==0, "provided wallet already used to create app");
         }
@@ -82,14 +81,12 @@ contract AppNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721Enumerable
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
-        _setTokensAppName(tokenId, appName);
-        emit AppNameSet(to, tokenId, appName, uri);
+        string memory validatedAppName = _validateAppName(appName);
+        _setTokensAppName(tokenId, validatedAppName);
+        emit AppNameSet(to, tokenId, validatedAppName, uri);
     }
 
-    function safeMintAppNFT(address to, string memory uri, string memory appName) public whenNotPaused {
-        uint balance = devNFTAddress.balanceOf(to);
-        require(balance > 0,"Minting of devNFT required");
-
+    function safeMintAppNFT(address to, string memory uri, string calldata appName) public whenNotPaused {
         if(!mintManyFlag){
             require(balanceOf(to)==0, "provided wallet already used to create app");
         }
@@ -103,8 +100,9 @@ contract AppNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721Enumerable
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
-        _setTokensAppName(tokenId, appName);
-        emit AppNameSet(to, tokenId, appName, uri);
+        string memory validatedAppName = _validateAppName(appName);
+        _setTokensAppName(tokenId, validatedAppName);
+        emit AppNameSet(to, tokenId, validatedAppName, uri);
     }
 
     function createSale(uint256 _tokenID, uint256 _amount) external {

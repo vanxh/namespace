@@ -188,14 +188,12 @@ describe(".app & .dev NFT minting", function () {
         await expect(appNFT.connect(account1).safeMintAppNFT(account1.address, appName.account1+app_uri, appName.account1)).not.to.be.reverted;
       });
 
-      it("Should revert with the right error if safeMintAppNFT called by user without minting .devNFT", async function () {
+      it("Should not revert with the right error if safeMintAppNFT called by user without minting .devNFT", async function () {
         const { appNFT, account1, appName, app_uri } = await loadFixture(
           deployNFTsFixture
         );
 
-        await expect(appNFT.connect(account1).safeMintAppNFT(account1.address, appName.account1+app_uri, appName.account1)).to.be.revertedWith(
-          "Minting of devNFT required"
-        );
+        await expect(appNFT.connect(account1).safeMintAppNFT(account1.address, appName.account1+app_uri, appName.account1)).not.to.be.reverted;
       });
 
       it("Should revert with the right error if more than 1 appName is minted by same user", async function () {
@@ -220,8 +218,8 @@ describe(".app & .dev NFT minting", function () {
         await expect(appNFT.connect(account1).safeMintAppNFT(account1.address, appName.account1+app_uri, appName.account1));
         
         await expect(appNFT.connect(account1).safeMintAppNFT(account1.address, appName.account1+app_uri, "secondName")).not.to.be.reverted;
-        expect(await appNFT.tokensAppName(1)).to.equal(appName.account1);
-        expect(await appNFT.tokensAppName(2)).to.equal("secondName");
+        expect(await appNFT.tokensAppName(1)).to.equal(`${appName.account1}.app`);
+        expect(await appNFT.tokensAppName(2)).to.equal("secondName.app");
       });
     });
 
@@ -263,7 +261,7 @@ describe(".app & .dev NFT minting", function () {
         await appNFT.setMintSpecialFlag(true);
         await expect(appNFT.connect(otherAccount).safeMintAppNFT(otherAccount.address, appName.otherAccount+app_uri, "XX")).not.to.be.reverted;
         // const tokenID = await appNFT.tokenIdForAppName("");
-        expect(await appNFT.tokensAppName(3)).to.equal("XX");
+        expect(await appNFT.tokensAppName(3)).to.equal("XX.app");
       });
 
       it("Should revert when the appName's blacklisted ie present in dappNameList", async function () {
@@ -289,7 +287,7 @@ describe(".app & .dev NFT minting", function () {
         await appNFT.setCheckDappNamesListFlag(false);
         await expect(appNFT.connect(otherAccount).safeMintAppNFT(otherAccount.address, appName.otherAccount+app_uri, specialdAppNames[1])).not.to.be.reverted;
         // const tokenID = await appNFT.tokenIdForAppName("");
-        expect(await appNFT.tokensAppName(3)).to.equal(specialdAppNames[1]);
+        expect(await appNFT.tokensAppName(3)).to.equal(`${specialdAppNames[1]}.app`);
       });
 
     })
@@ -327,7 +325,7 @@ describe(".app & .dev NFT minting", function () {
         );
 
         await basicMintDone(devNFT, appNFT, dev_uri, app_uri, devName, appName);
-        const tokenID = await appNFT.tokenIdForAppName(appName.account1);
+        const tokenID = await appNFT.tokenIdForAppName(`${appName.account1}.app`);
         await appNFT.connect(account1).createSale(tokenID, 10000000000);
         const price = await appNFT.priceOf(tokenID);
 
@@ -342,7 +340,7 @@ describe(".app & .dev NFT minting", function () {
         );
 
         await basicMintDone(devNFT, appNFT, dev_uri, app_uri, devName, appName);
-        const tokenID = await appNFT.tokenIdForAppName(appName.account1);
+        const tokenID = await appNFT.tokenIdForAppName(`${appName.account1}.app`);
         await appNFT.connect(account1).createSale(tokenID, 10000000000);
         const price = await appNFT.priceOf(tokenID);
 
@@ -357,7 +355,7 @@ describe(".app & .dev NFT minting", function () {
         );
 
         await basicMintDone(devNFT, appNFT, dev_uri, app_uri, devName, appName);
-        const tokenID = await appNFT.tokenIdForAppName(appName.account1);
+        const tokenID = await appNFT.tokenIdForAppName(`${appName.account1}.app`);
         await appNFT.connect(account1).createSale(tokenID, 10000000000);
         
         const price = await appNFT.priceOf(tokenID);

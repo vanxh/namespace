@@ -9,6 +9,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
  */
 abstract contract ERC721APPStorageUpgradeable is Initializable, ERC721Upgradeable {
     function __ERC721APPStorage_init() internal onlyInitializing {
+        appSuffix = ".app";
     }
 
     function __ERC721APPStorage_init_unchained() internal onlyInitializing {
@@ -19,6 +20,8 @@ abstract contract ERC721APPStorageUpgradeable is Initializable, ERC721Upgradeabl
     mapping(uint256 => string) private _tokensAppNames;
     // Mapping for token Names to ids
     mapping(string => uint256) private _tokenIdForAppNames;
+    // storing the suffix of the app name
+    bytes public appSuffix;
 
     function tokensAppName(uint256 tokenId) public view virtual returns (string memory) {
         _requireMinted(tokenId);
@@ -29,6 +32,29 @@ abstract contract ERC721APPStorageUpgradeable is Initializable, ERC721Upgradeabl
         uint256 _tokenId = _tokenIdForAppNames[_appName];
         _requireMinted(_tokenId);
         return _tokenId;
+    }
+
+    /**
+     * @dev Validates `_appName` and returns a valid app Name ie(should end with .app)
+     *
+     * Requirements:
+     *
+     * - `_appName` must be valid.
+     */
+    function _validateAppName(string calldata str) internal virtual returns (string memory) {
+        bytes calldata strBytes = bytes(str);
+        if (strBytes.length < 4) {
+            return string(abi.encodePacked(string(strBytes),string(appSuffix)));
+        }
+        uint256 strBytesLength = strBytes.length;
+        bytes memory strBytesSuffix = strBytes[strBytesLength-4:strBytesLength];
+        if(strBytes.length == 4 && keccak256(strBytesSuffix) == keccak256(appSuffix)){
+            revert("Validation error: name is empty");
+        }else if(keccak256(strBytesSuffix) == keccak256(appSuffix)){
+           return string(strBytes);
+        }else{
+            return string(abi.encodePacked(string(strBytes),string(appSuffix)));
+        }
     }
 
     /**

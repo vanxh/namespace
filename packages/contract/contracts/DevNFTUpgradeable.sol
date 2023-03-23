@@ -23,11 +23,6 @@ contract DevNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721Enumerable
     CountersUpgradeable.Counter private _tokenIdCounter;
     event DevNameSet(address indexed owner, uint256 indexed tokenId, string devName, string uri);
 
-    // function _baseURI() internal pure override returns (string memory) {
-    //     return "ipfs://";
-    // }
-
-
     /// @custom:oz-upgrades-unsafe-allow constructor    
     constructor() {
         _disableInitializers();
@@ -54,24 +49,26 @@ contract DevNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721Enumerable
         _unpause();
     }
 
-    function safeMint(address to, string memory uri, string memory devName) public onlyOwner {
+    function safeMint(address to, string memory uri, string calldata devName) public onlyOwner {
         require(balanceOf(to)==0, "provided wallet already used to create app");
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
-        _setTokensDevName(tokenId, devName);
-        emit DevNameSet(to, tokenId, devName, uri);
+        string memory validatedDevName = _validateDevName(devName);
+        _setTokensDevName(tokenId, validatedDevName);
+        emit DevNameSet(to, tokenId, validatedDevName, uri);
     }
 
-    function safeMintDevNFT(address to, string memory uri, string memory devName) public whenNotPaused {
+    function safeMintDevNFT(address to, string memory uri, string calldata devName) public whenNotPaused {
         require(balanceOf(to)==0, "provided wallet already used to create app");
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
-        _setTokensDevName(tokenId, devName);
-        emit DevNameSet(to, tokenId, devName, uri);
+        string memory validatedDevName = _validateDevName(devName);
+        _setTokensDevName(tokenId, validatedDevName);
+        emit DevNameSet(to, tokenId, validatedDevName, uri);
     }
 
     function feesWithdraw(address payable _to) external onlyOwner{

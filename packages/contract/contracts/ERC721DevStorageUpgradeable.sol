@@ -9,6 +9,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
  */
 abstract contract ERC721DevStorageUpgradeable is Initializable, ERC721Upgradeable {
     function __ERC721DevStorage_init() internal onlyInitializing {
+        devSuffix = ".dev";
     }
 
     function __ERC721DevStorage_init_unchained() internal onlyInitializing {
@@ -19,6 +20,8 @@ abstract contract ERC721DevStorageUpgradeable is Initializable, ERC721Upgradeabl
     mapping(uint256 => string) private _tokensDevNames;
     // Mapping for dev Names to ids
     mapping(string => uint256) private _tokenIdForDevNames;
+    // storing the suffix of the dev name
+    bytes public devSuffix;
 
     function tokensDevName(uint256 tokenId) public view virtual returns (string memory) {
         _requireMinted(tokenId);
@@ -29,6 +32,29 @@ abstract contract ERC721DevStorageUpgradeable is Initializable, ERC721Upgradeabl
         uint256 _tokenId = _tokenIdForDevNames[_devName];
         _requireMinted(_tokenId);
         return _tokenId;
+    }
+
+    /**
+     * @dev Validates `_devName` and returns a valid dev Name ie(should end with .dev)
+     *
+     * Requirements:
+     *
+     * - `_devName` must be valid.
+     */
+    function _validateDevName(string calldata str) internal virtual returns (string memory) {
+        bytes calldata strBytes = bytes(str);
+        if (strBytes.length < 4) {
+            return string(abi.encodePacked(string(strBytes),string(devSuffix)));
+        }
+        uint256 strBytesLength = strBytes.length;
+        bytes memory strBytesSuffix = strBytes[strBytesLength-4:strBytesLength];
+        if(strBytes.length == 4 && keccak256(strBytesSuffix) == keccak256(devSuffix)){
+            revert("Validation error: name is empty");
+        }else if(keccak256(strBytesSuffix) == keccak256(devSuffix)){
+           return string(strBytes);
+        }else{
+            return string(abi.encodePacked(string(strBytes),string(devSuffix)));
+        }
     }
 
     /**

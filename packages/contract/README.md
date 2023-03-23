@@ -5,7 +5,7 @@ add pvt key in .env file, for onchain deployments
 add reservedDappNames in ./scripts/reservedDappNames.json
 
 Current deployments are configured for mumbai(Polygon)
-```shel
+```shell
 npm run deployDappNameList  //to deploy .dappNameList contract
 npm run deployDevProxy      //to deploy .devNFT contract
 npm run deployAppProxy      //to deploy .appNFT contract
