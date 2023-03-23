@@ -1,9 +1,14 @@
+import { useState } from "react";
+import { useRouter } from "next/router";
 import { Input, Button } from "ui";
 
 import { NavbarHomepage } from "@/components/Navbar";
 import Spacer from "@/components/Spacer";
 
 export default function Page() {
+  const router = useRouter();
+  const [search, setSearch] = useState("");
+
   return (
     <>
       <NavbarHomepage />
@@ -21,8 +26,23 @@ export default function Page() {
         </h3>
 
         <div className="flex flex-col md:flex-row gap-x-3 gap-y-3 w-full md:w-[70%] md:py-4 md:px-4 rounded-lg md:border-[0.5px] md:border-solid md:border-[#D1D1D1] md:bg-gradient-to-r md:to-[#E3F3FE] md:from-[#FBFDFE]">
-          <Input placeholder="Quick Search" className="" />
-          <Button>Search</Button>
+          <Input
+            placeholder="Quick Search"
+            className=""
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <Button
+            onClick={async () => {
+              await router.push("/app", {
+                query: {
+                  q: search,
+                },
+              });
+            }}
+          >
+            Search
+          </Button>
         </div>
       </div>
 
