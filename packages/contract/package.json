@@ -2,6 +2,7 @@
   "name": "meroku-contracts",
   "version": "1.0.0",
   "description": "Includes contracts for .app and .dev NFTs",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "build": "hardhat compile",
@@ -15,7 +16,8 @@
     "verifyDI": "hardhat run scripts/verifyDevImplementation.js --network mumbai",
     "deployDappNameList": "hardhat run scripts/deployDappNameList.js --network mumbai",
     "verifyDappNameList": "hardhat run scripts/verifyDappNameList.js --network mumbai",
-    "addDappNames": "hardhat run scripts/addDappNames.js --network mumbai"
+    "addDappNames": "hardhat run scripts/addDappNames.js --network mumbai",
+    "upgradeAppProxy": "hardhat run scripts/upgradeProxy.js --network mumbai"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.2",

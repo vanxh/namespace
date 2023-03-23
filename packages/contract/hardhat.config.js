@@ -19,17 +19,17 @@ module.exports = {
     // Obtain one at https://etherscan.io/
     apiKey:{
       //ethereum
-      mainnet: 'H2EPP8FBXTDEDAAN93Z4975HU6FZYSFQY8',
-      ropsten: 'H2EPP8FBXTDEDAAN93Z4975HU6FZYSFQY8',
-      rinkeby: 'H2EPP8FBXTDEDAAN93Z4975HU6FZYSFQY8',
-      goerli: 'H2EPP8FBXTDEDAAN93Z4975HU6FZYSFQY8',
-      kovan: 'H2EPP8FBXTDEDAAN93Z4975HU6FZYSFQY8',
-      sepolia: 'H2EPP8FBXTDEDAAN93Z4975HU6FZYSFQY8',
+      mainnet: process.env.ETHERSCAN_API_KEY,
+      ropsten: process.env.ETHERSCAN_API_KEY,
+      rinkeby: process.env.ETHERSCAN_API_KEY,
+      goerli: process.env.ETHERSCAN_API_KEY,
+      kovan: process.env.ETHERSCAN_API_KEY,
+      sepolia: process.env.ETHERSCAN_API_KEY,
 
       //polygon
-      polygon: 'NHKRRX8TVHS6W918QJQVGK99TRWKU5FERQ',
-      polygonMumbai: 'NHKRRX8TVHS6W918QJQVGK99TRWKU5FERQ',
-    }, ////'82I9WI5C9SVS9E85HJKRUQFUGVRFI2K7XH'//process.env.ETHERSCAN_API_KEY
+      polygon: process.env.POLYGONSCAN_API_KEY,
+      polygonMumbai: process.env.POLYGONSCAN_API_KEY,
+    },
     customChains: []  
   },
   networks: {
@@ -38,7 +38,7 @@ module.exports = {
       // accounts,
     },
     mainnet: {
-      url: `https://mainnet.infura.io/v3/d936a575133e4dea8714cc109056237c`,
+      url: `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
       accounts,
       from: "",
       chainId: 1,
@@ -50,7 +50,7 @@ module.exports = {
       timeout : 200000
     },
     goerli: {
-        url: `https://goerli.infura.io/v3/d936a575133e4dea8714cc109056237c`,
+        url: `https://eth-goerli.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
         accounts: [process.env.PRIVATE_KEY], //add private key in this
         chainId: 5,
         live: true,

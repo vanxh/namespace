@@ -1,5 +1,6 @@
 const { ethers } = require("hardhat");
 const contractAddress = require("./config.json");
+const {names} = require("./reservedDappNames.json");
 
 
 async function addDappNames() {
@@ -10,9 +11,9 @@ async function addDappNames() {
         const dappNameList = new ethers.Contract(contractAddress.DappNameList, [
             "function setDappNames(string[] memory dappNames)"
         ], ethers.provider.getSigner());
-        await dappNameList.setDappNames(["dapp1", "dapp2", "dapp3"]);
+        await dappNameList.setDappNames(names);
     } catch (err) {
-        console.log("verifyFactory error: ", err)
+        console.log("addDappNames error: ", err)
     }
     
 }
@@ -35,3 +36,4 @@ main()
         console.error(error);
         process.exit(1);
     });
+    

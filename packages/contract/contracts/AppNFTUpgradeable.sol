@@ -25,8 +25,9 @@ contract AppNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721Enumerable
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
     CountersUpgradeable.Counter private _tokenIdCounter;
-
-    uint64 public fees;
+    event AppNameSet(address indexed owner, uint256 indexed tokenId, string appName, string uri);
+    event PriceSet(uint256 indexed tokenId, uint256 price);
+    uint128 public fees; //TODO: change to compatible fees
     // flag to prevent specific app name length
     bool public mintSpecialFlag;
     bool public mintManyFlag;
@@ -52,6 +53,7 @@ contract AppNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721Enumerable
         __Ownable_init();
         __ERC721Burnable_init();
         __UUPSUpgradeable_init();
+        __ERC721APPStorage_init();
 
         fees = 2000000000; //2Gwei = 2%;
         devNFTAddress = IERC721Upgradeable(devNFTAddress_);
@@ -81,6 +83,7 @@ contract AppNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721Enumerable
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
         _setTokensAppName(tokenId, appName);
+        emit AppNameSet(to, tokenId, appName, uri);
     }
 
     function safeMintAppNFT(address to, string memory uri, string memory appName) public whenNotPaused {
@@ -101,6 +104,7 @@ contract AppNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721Enumerable
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
         _setTokensAppName(tokenId, appName);
+        emit AppNameSet(to, tokenId, appName, uri);
     }
 
     function createSale(uint256 _tokenID, uint256 _amount) external {
@@ -109,6 +113,7 @@ contract AppNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721Enumerable
 
         priceOf[_tokenID] = _amount;
         onSale[_tokenID] = true;
+        emit PriceSet(_tokenID, _amount);
     }
 
     function endSale(uint256 _tokenID) external {

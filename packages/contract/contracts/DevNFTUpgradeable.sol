@@ -1,12 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-// import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-// import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-// import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-// import "@openzeppelin/contracts/security/Pausable.sol";
-// import "@openzeppelin/contracts/access/Ownable.sol";
-// import "@openzeppelin/contracts/utils/Counters.sol";
 import "./ERC721DevStorageUpgradeable.sol";
 
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
@@ -27,11 +21,7 @@ contract DevNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721Enumerable
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
     CountersUpgradeable.Counter private _tokenIdCounter;
-
-    uint256 public fees;
-    mapping(uint256 => uint256) public priceOf;
-    mapping(uint256 => bool) public onSale;
-    mapping(address => bool) public devCreated;
+    event DevNameSet(address indexed owner, uint256 indexed tokenId, string devName, string uri);
 
     // function _baseURI() internal pure override returns (string memory) {
     //     return "ipfs://";
@@ -50,8 +40,9 @@ contract DevNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721Enumerable
         __Ownable_init();
         __ERC721Burnable_init();
         __UUPSUpgradeable_init();
+        __ERC721DevStorage_init();
 
-        fees = 2000000000; //2Gwei = 2%;
+
         _tokenIdCounter.increment();
     }
 
@@ -70,6 +61,7 @@ contract DevNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721Enumerable
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
         _setTokensDevName(tokenId, devName);
+        emit DevNameSet(to, tokenId, devName, uri);
     }
 
     function safeMintDevNFT(address to, string memory uri, string memory devName) public whenNotPaused {
@@ -79,6 +71,7 @@ contract DevNFTUpgradeable is Initializable, ERC721Upgradeable, ERC721Enumerable
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
         _setTokensDevName(tokenId, devName);
+        emit DevNameSet(to, tokenId, devName, uri);
     }
 
     function feesWithdraw(address payable _to) external onlyOwner{

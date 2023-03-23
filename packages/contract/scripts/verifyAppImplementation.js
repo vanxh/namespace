@@ -17,8 +17,8 @@ async function verifyAppNFT() {
 
 async function main() {
     console.log("starting verify");
-const blockNumber = await ethers.provider.getBlockNumber();
-console.log("blockNumber: ", blockNumber);
+    const blockNumber = await ethers.provider.getBlockNumber();
+    console.log("blockNumber: ", blockNumber);
     await verifyAppNFT();
 
 }
@@ -29,3 +29,4 @@ main()
         console.error(error);
         process.exit(1);
     });
+    
