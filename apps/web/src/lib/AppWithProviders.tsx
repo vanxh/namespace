@@ -31,7 +31,7 @@ export default function AppWithProviders({
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains}>
         <ThirdwebProvider wagmiClient={wagmiClient}>
-          <Toaster />
+          <Toaster position="top-center" />
           {children}
         </ThirdwebProvider>
       </RainbowKitProvider>

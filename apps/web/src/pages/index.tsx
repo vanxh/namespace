@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import { Input, Button } from "ui";
 
-import { NavbarHomepage } from "@/components/Navbar";
+import NavbarHomepage from "@/components/Navbar/Homepage";
 import Spacer from "@/components/Spacer";
 
 export default function Page() {

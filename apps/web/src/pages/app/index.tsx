@@ -4,25 +4,118 @@ import { useRouter } from "next/router";
 import { useSDK } from "@thirdweb-dev/react";
 import { useAccount } from "wagmi";
 import { CheckCircleIcon } from "lucide-react";
+import { toast } from "sonner";
 import { Input, Button } from "ui";
 
-import { NavbarApp } from "@/components/Navbar";
+import { env } from "@/env/schema.mjs";
+import NavbarApp from "@/components/Navbar/App";
 import Spacer from "@/components/Spacer";
 import GlobalSearchIcon from "@/public/global-search.svg";
-import { toast } from "sonner";
+import Spinner from "@/components/Spinner";
 
-const APP_CONTRACT_ADDRESS = "0x7d6612a6acf6f9b2e799231eca1e00c26cb52e01";
-const DEV_CONTRACT_ADDRESS = "0x65dfeEA95A6E2faE38bfD748B6A042BBDdAcC3D4";
-
-export default function Page() {
+export default function App() {
   const router = useRouter();
-  const [search, setSearch] = useState(router.query.q as string);
+  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState((router.query.q as string) ?? "");
   const [available, setAvailable] = useState<{
     [key: string]: boolean;
   }>();
 
   const { address } = useAccount();
   const sdk = useSDK();
+
+  const searchNFTs = async () => {
+    setLoading(true);
+    setAvailable(undefined);
+    if (!search || !sdk) return;
+
+    const appContract = await sdk.getContract(
+      env.NEXT_PUBLIC_APP_CONTRACT_ADDRESS
+    );
+    const devContract = await sdk.getContract(
+      env.NEXT_PUBLIC_DEV_CONTRACT_ADDRESS
+    );
+
+    const _available = {} as {
+      [key: string]: boolean;
+    };
+
+    try {
+      const data1 = await appContract.call(
+        "tokenIdForAppName",
+        search.replaceAll(".app", "") + ".app"
+      );
+      _available[`${search.replaceAll(".app", "")}.app`] = false;
+    } catch (e) {
+      const err = `${e}`;
+      if (!err.includes("invalid token ID")) {
+        console.error(e);
+      }
+      _available[`${search.replaceAll(".app", "")}.app`] = true;
+    }
+
+    try {
+      const data2 = await devContract.call(
+        "tokenIdForDevName",
+        search.replaceAll(".dev", "") + ".dev"
+      );
+      _available[`${search.replaceAll(".dev", "")}.dev`] = false;
+    } catch (e) {
+      const err = `${e}`;
+      if (!err.includes("invalid token ID")) {
+        console.error(e);
+      }
+      _available[`${search.replaceAll(".dev", "")}.dev`] = true;
+    }
+
+    setAvailable(_available);
+    setLoading(false);
+  };
+
+  const claimNFT = async (name: string) => {
+    const sendTx = async () => {
+      if (!sdk) return;
+
+      const nftType = name.split(".").pop();
+
+      if (nftType === "app") {
+        const appContract = await sdk.getContract(
+          env.NEXT_PUBLIC_APP_CONTRACT_ADDRESS
+        );
+
+        const data = await appContract.call(
+          "safeMintAppNFT",
+          address,
+          name,
+          name
+        );
+        console.log(data);
+      } else if (nftType === "dev") {
+        const devContract = await sdk.getContract(
+          env.NEXT_PUBLIC_DEV_CONTRACT_ADDRESS
+        );
+
+        const data = await devContract.call(
+          "safeMintDevNFT",
+          address,
+          name,
+          name
+        );
+        console.log(data);
+      }
+
+      setAvailable((prev) => ({
+        ...prev,
+        [name]: false,
+      }));
+    };
+
+    toast.promise(new Promise(() => sendTx()), {
+      success: `Successfully claimed domain ${name}`,
+      error: `Failed to claim domain ${name}`,
+      loading: `Claiming domain ${name}...`,
+    });
+  };
 
   return (
     <div className="h-full flex flex-col items-center justify-center min-h-screen w-[100vw] bg-gray-50">
@@ -35,50 +128,12 @@ export default function Page() {
             placeholder={"Search for new domain"}
             className=""
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => setSearch(e.target.value.replace(/ /g, ""))}
           />
-          <Button
-            onClick={async () => {
-              setAvailable(undefined);
-              if (!search || !sdk) return;
-
-              const appContract = await sdk.getContract(APP_CONTRACT_ADDRESS);
-              const devContract = await sdk.getContract(DEV_CONTRACT_ADDRESS);
-
-              const _available = {} as {
-                [key: string]: boolean;
-              };
-
-              try {
-                const data1 = await appContract.call(
-                  "tokenIdForAppName",
-                  search.replaceAll(".app", "") + ".app"
-                );
-                _available[`${search}.app`] = false;
-              } catch (e) {
-                console.error(e);
-                _available[`${search}.app`] = true;
-              }
-
-              try {
-                const data2 = await devContract.call(
-                  "tokenIdForDevName",
-                  search.replaceAll(".dev", "") + ".dev"
-                );
-                _available[`${search}.dev`] = false;
-              } catch (e) {
-                console.error(e);
-                _available[`${search}.dev`] = true;
-              }
-
-              setAvailable(_available);
-            }}
-          >
-            Search
-          </Button>
+          <Button onClick={searchNFTs}>Search</Button>
         </div>
 
-        {!available && (
+        {!available && !loading && (
           <div className="flex flex-col justify-center items-center gap-y-2 w-full">
             <Image
               src={GlobalSearchIcon}
@@ -92,6 +147,8 @@ export default function Page() {
             </p>
           </div>
         )}
+
+        {loading && <Spinner />}
 
         {available && (
           <div className="flex flex-col w-full gap-y-3 text-left">
@@ -113,47 +170,8 @@ export default function Page() {
 
                 <Button
                   className="bg-green-500 hover:bg-green-600"
-                  disabled={!available[name]}
-                  onClick={() => {
-                    toast.promise(
-                      async () => {
-                        if (!sdk) return;
-
-                        const nftType = name.split(".").pop();
-
-                        if (nftType === "app") {
-                          const appContract = await sdk.getContract(
-                            APP_CONTRACT_ADDRESS
-                          );
-
-                          const data = await appContract.call(
-                            "safeMintAppNFT",
-                            address,
-                            name,
-                            name
-                          );
-                          console.log(data);
-                        } else if (nftType === "dev") {
-                          const devContract = await sdk.getContract(
-                            DEV_CONTRACT_ADDRESS
-                          );
-
-                          const data = await devContract.call(
-                            "safeMintDevNFT",
-                            address,
-                            name,
-                            name
-                          );
-                          console.log(data);
-                        }
-                      },
-                      {
-                        success: `Successfully claimed domain ${name}`,
-                        error: `Failed to claim domain ${name}`,
-                        loading: `Claiming domain ${name}...`,
-                      }
-                    );
-                  }}
+                  disabled={!available[name] || !address}
+                  onClick={async () => await claimNFT(name)}
                 >
                   Claim
                 </Button>

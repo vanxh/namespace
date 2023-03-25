@@ -12,5 +12,11 @@
     "dev": {
       "cache": false
     }
-  }
+  },
+  "globalEnv": [
+    "SKIP_ENV_VALIDATION",
+    "NODE_ENV",
+    "NEXT_PUBLIC_APP_CONTRACT_ADDRESS",
+    "NEXT_PUBLIC_DEV_CONTRACT_ADDRESS"
+  ]
 }
