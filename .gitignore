@@ -54,6 +54,7 @@ packages/contract/.openzeppelin
 # Hardhat files
 cache
 artifacts
+.openzeppelin
 
 #solidity
 .vscode
