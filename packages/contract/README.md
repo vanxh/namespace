@@ -1,10 +1,12 @@
 # .appNFT & .devNFT contracts (upgradeable)
+
 - Using @openzeppelin/contracts & @openzeppelin/contracts-upgradeable for standard libraries for Context, Strings, ERC721, ERC721Enumerable
 
 add pvt key in .env file, for onchain deployments
 add reservedDappNames in ./scripts/reservedDappNames.json
 
 Current deployments are configured for mumbai(Polygon)
+
 ```shell
 npm run deployDappNameList  //to deploy .dappNameList contract
 npm run deployDevProxy      //to deploy .devNFT contract
