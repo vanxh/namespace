@@ -32,3 +32,30 @@ yarn-error.log*
 
 # turbo
 .turbo
+
+# contracts
+packages/contract/node_modules
+packages/contract/.env
+packages/contract/coverage
+
+# contract
+node_modules
+.env
+coverage
+coverage.json
+typechain
+typechain-types
+
+# Hardhat files
+packages/contract/cache
+packages/contract/artifacts
+packages/contract/.openzeppelin
+
+# Hardhat files
+cache
+artifacts
+.openzeppelin
+
+#solidity
+.vscode
+soljson-v0.8.0+commit.c7dfd78e.js

@@ -1,0 +1,34 @@
+{
+  "name": "meroku-contracts",
+  "version": "1.0.0",
+  "description": "Includes contracts for .app and .dev NFTs",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "build": "hardhat compile",
+    "console": "hardhat console",
+    "test": "hardhat test",
+    "deploy:appNFT": "hardhat run scripts/deployAppNFT.js --network mumbai",
+    "deployAppProxy": "hardhat run scripts/deployAppProxy.js --network mumbai",
+    "verify": "hardhat run scripts/verify.js --network mumbai",
+    "verifyAI": "hardhat run scripts/verifyAppImplementation.js --network mumbai",
+    "deployDevProxy": "hardhat run scripts/deployDevProxy.js --network mumbai",
+    "verifyDI": "hardhat run scripts/verifyDevImplementation.js --network mumbai",
+    "deployDappNameList": "hardhat run scripts/deployDappNameList.js --network mumbai",
+    "verifyDappNameList": "hardhat run scripts/verifyDappNameList.js --network mumbai",
+    "addDappNames": "hardhat run scripts/addDappNames.js --network mumbai",
+    "upgradeAppProxy": "hardhat run scripts/upgradeProxy.js --network mumbai"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+    "@nomiclabs/hardhat-ethers": "^2.2.2",
+    "@openzeppelin/hardhat-upgrades": "^1.22.1",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.13.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.8.2",
+    "@openzeppelin/contracts-upgradeable": "^4.8.2",
+    "dotenv": "^16.0.3"
+  }
+}
