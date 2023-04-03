@@ -14,7 +14,7 @@ export default function Page() {
       <NavbarHomepage />
       <Spacer />
 
-      <div className="flex flex-col items-center justify-center max-w-[95%] md:max-w-[80%] lg:max-w-[50%] text-left md:text-center gap-y-4 md:gap-y-12">
+      <div className="flex flex-col items-center justify-center max-w-[95%] md:max-w-[80%] lg:max-w-[50%] text-left md:text-center gap-y-4 md:gap-y-12 py-4">
         <h1 className="font-bold text-4xl md:text-7xl">
           Claim your own <span className="text-blue-500">.dev</span> and{" "}
           <span className="text-blue-500">.app</span> NFTs

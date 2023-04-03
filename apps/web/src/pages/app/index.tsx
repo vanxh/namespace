@@ -122,7 +122,7 @@ export default function App() {
       <NavbarApp />
       <Spacer />
 
-      <div className="flex flex-col items-center justify-start max-w-[95%] md:max-w-[80%] lg:max-w-[50%] text-left md:text-center gap-y-4 md:gap-y-10 w-full min-h-[90vh]">
+      <div className="flex flex-col items-center justify-start max-w-[95%] md:max-w-[80%] lg:max-w-[50%] text-left md:text-center gap-y-4 md:gap-y-10 w-full min-h-[90vh] py-4">
         <div className="flex flex-col md:flex-row gap-x-3 gap-y-3 w-full md:w-[70%]rounded-lg">
           <Input
             placeholder={"Search for new domain"}

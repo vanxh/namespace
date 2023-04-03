@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useAccount } from "wagmi";
 import { CheckCircleIcon } from "lucide-react";
 import { Button } from "ui";
@@ -16,7 +17,7 @@ export default function Owned() {
       <NavbarApp />
       <Spacer />
 
-      <div className="flex flex-col items-center justify-start max-w-[95%] md:max-w-[80%] lg:max-w-[50%] text-left md:text-center gap-y-4 md:gap-y-10 w-full min-h-[90vh]">
+      <div className="flex flex-col items-center justify-start max-w-[95%] md:max-w-[80%] lg:max-w-[50%] text-left md:text-center gap-y-4 md:gap-y-10 w-full min-h-[90vh] py-4">
         <div className="flex flex-col items-start justify-center w-full gap-y-4">
           <h1 className="font-bold text-4xl md:text-6xl">Registered Domains</h1>
 
@@ -35,31 +36,39 @@ export default function Owned() {
           </div>
         )}
 
-        {[...devNfts, ...appNfts].length === 0 && isLoading && <Spinner />}
+        {address && [...devNfts, ...appNfts].length === 0 && isLoading && (
+          <Spinner />
+        )}
 
-        <div className="flex flex-col w-full gap-y-3 text-left">
-          {[...appNfts, ...devNfts].map((name) => (
-            <div
-              key={name}
-              className="flex flex-row items-center justify-between w-full px-4 py-3 rounded-lg bg-white"
-            >
-              <div className="flex flex-row gap-x-2 items-center justify-center">
-                <CheckCircleIcon className="text-green-500" />
-                <p>{name}</p>
-              </div>
+        {address && [...devNfts, ...appNfts].length === 0 && !isLoading && (
+          <div className="flex flex-col justify-center items-center gap-y-2 w-full">
+            <p className="text-[#909090] text-xs text-center">
+              You don&apos;t have any domains yet
+            </p>
+          </div>
+        )}
 
-              <Button
-                className="bg-green-500 hover:bg-green-600"
-                disabled
-                onClick={() => {
-                  // TODO: Implement
-                }}
+        {address && (
+          <div className="flex flex-col w-full gap-y-3 text-left">
+            {[...appNfts, ...devNfts].map((name) => (
+              <div
+                key={name}
+                className="flex flex-row items-center justify-between w-full px-4 py-3 rounded-lg bg-white"
               >
-                View Info
-              </Button>
-            </div>
-          ))}
-        </div>
+                <div className="flex flex-row gap-x-2 items-center justify-center">
+                  <CheckCircleIcon className="text-green-500" />
+                  <p>{name}</p>
+                </div>
+
+                <Link href={`/app/owned/info?name=${name}`}>
+                  <Button className="bg-green-500 hover:bg-green-600">
+                    View Info
+                  </Button>
+                </Link>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <Spacer />
