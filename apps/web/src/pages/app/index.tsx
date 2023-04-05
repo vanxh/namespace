@@ -73,44 +73,82 @@ export default function App() {
   };
 
   const claimNFT = async (name: string) => {
-    const sendTx = async () => {
-      if (!sdk) return;
+    const sendTx = async (
+      resolve: (value: any) => void,
+      reject: (reason: any) => void
+    ) => {
+      try {
+        if (!sdk) return reject("no sdk");
 
-      const nftType = name.split(".").pop();
+        const nftType = name.split(".").pop();
 
-      if (nftType === "app") {
-        const appContract = await sdk.getContract(
-          env.NEXT_PUBLIC_APP_CONTRACT_ADDRESS
-        );
+        if (nftType === "app") {
+          const appContract = await sdk.getContract(
+            env.NEXT_PUBLIC_APP_CONTRACT_ADDRESS
+          );
 
-        const data = await appContract.call(
-          "safeMintAppNFT",
-          address,
-          name,
-          name
-        );
-        console.log(data);
-      } else if (nftType === "dev") {
-        const devContract = await sdk.getContract(
-          env.NEXT_PUBLIC_DEV_CONTRACT_ADDRESS
-        );
+          // const data = await appContract.call(
+          //     "safeMintAppNFT",
+          //     address,
+          //     name,
+          //     name
+          // );
+          // console.log(data);
 
-        const data = await devContract.call(
-          "safeMintDevNFT",
-          address,
-          name,
-          name
-        );
-        console.log(data);
+          const tx = appContract.prepare("safeMintAppNFT", [
+            address,
+            name,
+            name,
+          ]);
+          tx.setGaslessOptions({
+            biconomy: {
+              apiId: "c6720081-99a3-4295-bfb1-248f1750f5fa",
+              apiKey: env.NEXT_PUBLIC_BICONOMY_API_KEY,
+              deadlineSeconds: 60,
+            },
+          });
+          const data = await tx.send();
+          console.log(data);
+        } else if (nftType === "dev") {
+          const devContract = await sdk.getContract(
+            env.NEXT_PUBLIC_DEV_CONTRACT_ADDRESS
+          );
+
+          // const data = await devContract.call(
+          //     "safeMintDevNFT",
+          //     address,
+          //     name,
+          //     name
+          // );
+          // console.log(data);
+
+          const tx = devContract.prepare("safeMintDevNFT", [
+            address,
+            name,
+            name,
+          ]);
+          tx.setGaslessOptions({
+            biconomy: {
+              apiId: "c6720081-99a3-4295-bfb1-248f1750f5fa",
+              apiKey: env.NEXT_PUBLIC_BICONOMY_API_KEY,
+              deadlineSeconds: 60,
+            },
+          });
+          const data = await tx.send();
+          console.log(data);
+        }
+
+        setAvailable((prev) => ({
+          ...prev,
+          [name]: false,
+        }));
+        return resolve("done");
+      } catch (e) {
+        return reject(e);
       }
-
-      setAvailable((prev) => ({
-        ...prev,
-        [name]: false,
-      }));
     };
 
-    toast.promise(new Promise(() => sendTx()), {
+    toast.promise(new Promise((resolve, reject) => sendTx(resolve, reject)), {
       success: `Successfully claimed domain ${name}`,
       error: `Failed to claim domain ${name}`,
       loading: `Claiming domain ${name}...`,

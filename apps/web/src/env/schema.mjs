@@ -1,3 +1,4 @@
+/* eslint-disable turbo/no-undeclared-env-vars */
 import { z } from "zod";
 
 /**
@@ -15,6 +16,7 @@ const server = z.object({
 const client = z.object({
     NEXT_PUBLIC_APP_CONTRACT_ADDRESS: z.string(),
     NEXT_PUBLIC_DEV_CONTRACT_ADDRESS: z.string(),
+    NEXT_PUBLIC_BICONOMY_API_KEY: z.string(),
 });
 
 /**
@@ -29,6 +31,7 @@ const processEnv = {
         process.env.NEXT_PUBLIC_APP_CONTRACT_ADDRESS,
     NEXT_PUBLIC_DEV_CONTRACT_ADDRESS:
         process.env.NEXT_PUBLIC_DEV_CONTRACT_ADDRESS,
+    NEXT_PUBLIC_BICONOMY_API_KEY: process.env.NEXT_PUBLIC_BICONOMY_API_KEY,
 };
 
 // Don't touch the part below

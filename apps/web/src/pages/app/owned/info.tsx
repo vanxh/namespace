@@ -19,7 +19,7 @@ export default function OwnedInfo() {
 
   const appName = router.query.name as string;
 
-  if (![...appNfts, ...devNfts].includes(appName)) {
+  if (![...appNfts, ...devNfts].includes(appName) && !isLoading) {
     return <div>Not found.</div>;
   }
 
