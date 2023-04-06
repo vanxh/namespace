@@ -15,6 +15,7 @@ export default function EditInfo() {
   const { isLoading, error, appNfts, devNfts } = useOwnedDomains();
 
   const appName = router.query.name as string;
+  const ext = appName.split(".").pop();
 
   if (![...appNfts, ...devNfts].includes(appName) && !isLoading) {
     return <div>Not found.</div>;
@@ -67,21 +68,10 @@ export default function EditInfo() {
             </div>
 
             {/* .app nfts */}
-            <AppEdit />
+            {ext === "app" && <AppEdit />}
 
             {/* .dev nfts */}
-            {/* <div className="flex flex-col items-center justify-start w-full rounded-lg bg-white shadow-[0_20_20_60_#0000000D] overflow-hidden">
-                            <div className="p-4 md:p-8 w-full gap-y-6 flex flex-col">
-                                <div className="flex flex-col gap-y-2">
-                                    <h3 className="text-[#101828] text-2xl font-semibold">
-                                        Dev Details
-                                    </h3>
-                                    <p className="text-[#475467] text-sm">
-                                        Edit your publisher details.
-                                    </p>
-                                </div>
-                            </div>
-                        </div> */}
+            {ext === "dev" && <AppEdit />}
           </div>
         )}
       </div>

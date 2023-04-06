@@ -14,6 +14,10 @@ export default function AppEdit() {
       <TabsContent value="details">
         <AppDetails />
       </TabsContent>
+
+      <TabsContent value="build">{/* TODO */}</TabsContent>
+
+      <TabsContent value="images">{/* TODO */}</TabsContent>
     </Tabs>
   );
 }
