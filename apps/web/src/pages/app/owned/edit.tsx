@@ -15,6 +15,7 @@ export default function EditInfo() {
   const { isLoading, error, appNfts, devNfts } = useOwnedDomains();
 
   const appName = router.query.name as string;
+  if (!appName) return;
   const ext = appName.split(".").pop();
 
   if (![...appNfts, ...devNfts].includes(appName) && !isLoading) {
