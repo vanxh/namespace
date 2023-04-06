@@ -7,6 +7,7 @@ import NavbarApp from "@/components/Navbar/App";
 import Spacer from "@/components/Spacer";
 import Spinner from "@/components/Spinner";
 import AppEdit from "@/components/AppEdit";
+import DevEdit from "@/components/DevEdit";
 
 // TODO: refactor to reusable components
 export default function EditInfo() {
@@ -72,7 +73,7 @@ export default function EditInfo() {
             {ext === "app" && <AppEdit />}
 
             {/* .dev nfts */}
-            {ext === "dev" && <AppEdit />}
+            {ext === "dev" && <DevEdit />}
           </div>
         )}
       </div>
