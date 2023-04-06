@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-tabs": "^1.0.3",
     "@rainbow-me/rainbowkit": "^0.12.1",
     "@thirdweb-dev/react": "^3.10.3",
     "@thirdweb-dev/sdk": "^3.10.3",

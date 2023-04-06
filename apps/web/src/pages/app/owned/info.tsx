@@ -53,8 +53,7 @@ export default function OwnedInfo() {
           </div>
         )}
 
-        {/* && !isLoading */}
-        {address && (
+        {address && !isLoading && (
           <div className="flex flex-col w-full gap-y-3 text-left">
             <div className="flex flex-row items-center justify-between w-full px-4 py-3 rounded-lg bg-white">
               <div className="flex flex-row gap-x-2 items-center justify-center">
@@ -92,20 +91,24 @@ export default function OwnedInfo() {
 
                 <Spacer direction="horizontal" />
 
-                <Button
-                  disabled
-                  className="bg-green-500 hover:bg-green-600 hidden md:block"
+                <Link
+                  href={`/app/owned/edit?name=${appName}`}
+                  className="disabled md:block"
                 >
-                  Edit Details
-                </Button>
+                  <Button className="bg-green-500 hover:bg-green-600 hidden md:block">
+                    Edit Details
+                  </Button>
+                </Link>
               </div>
 
-              <Button
-                disabled
-                className="bg-green-500 hover:bg-green-600 self-start mt-4 mx-4 min-w-[50%] md:hidden"
+              <Link
+                href={`/app/owned/edit?name=${appName}`}
+                className="md:hidden"
               >
-                Edit Details
-              </Button>
+                <Button className="bg-green-500 hover:bg-green-600 self-start mt-4 mx-4 min-w-[50%] md:hidden">
+                  Edit Details
+                </Button>
+              </Link>
 
               <div className="p-4 md:p-8 w-full gap-y-6 flex flex-col">
                 <div className="flex flex-col gap-y-2">
