@@ -5,3 +5,4 @@ export * from "./Textarea";
 export * from "./Label";
 export * from "./Dropdown";
 export * from "./Select";
+export * from "./Radio";
