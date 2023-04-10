@@ -73,7 +73,7 @@ export default function EditInfo() {
             {ext === "app" && <AppEdit appName={appName} />}
 
             {/* .dev nfts */}
-            {ext === "dev" && <DevEdit devName={devName} />}
+            {ext === "dev" && <DevEdit devName={appName} />}
           </div>
         )}
       </div>
