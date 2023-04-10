@@ -1,8 +1,7 @@
-import { Delete, File, Trash } from "lucide-react";
+import { File, Trash } from "lucide-react";
 import { useState } from "react";
 import {
   Input,
-  Textarea,
   Select,
   SelectContent,
   SelectItem,
