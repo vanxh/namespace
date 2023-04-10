@@ -70,10 +70,10 @@ export default function EditInfo() {
             </div>
 
             {/* .app nfts */}
-            {ext === "app" && <AppEdit />}
+            {ext === "app" && <AppEdit appName={appName} />}
 
             {/* .dev nfts */}
-            {ext === "dev" && <DevEdit />}
+            {ext === "dev" && <DevEdit devName={devName} />}
           </div>
         )}
       </div>

@@ -1,3 +1,6 @@
+import useAppMetadata from "@/lib/hooks/useAppMetadata";
+import { useStorage } from "@thirdweb-dev/react";
+import { useState } from "react";
 import {
   Input,
   Label,
@@ -35,7 +38,15 @@ const AppDetailsRow = ({
   );
 };
 
-export default function AppDetails() {
+export default function AppDetails({ appName }: { appName: string }) {
+  const { metadata, isLoading, error } = useAppMetadata(appName);
+  const storage = useStorage();
+
+  console.log(metadata);
+
+  const [name, setName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+
   return (
     <div className="flex flex-col items-center justify-start w-full rounded-lg bg-white shadow-[0_20_20_60_#0000000D] overflow-hidden">
       <div className="p-4 md:p-8 w-full gap-y-6 flex flex-col">
@@ -45,14 +56,22 @@ export default function AppDetails() {
         </div>
 
         <AppDetailsRow label="Name" isRequired>
-          <Input placeholder="Enter a name" />
+          <Input
+            placeholder={metadata.name ?? "Enter a name"}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
         </AppDetailsRow>
         <AppDetailsRow
           label="Description"
           description="Write a description of the app"
           isRequired
         >
-          <Textarea placeholder="Enter a description" />
+          <Textarea
+            placeholder={metadata.description ?? "Enter a description"}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
         </AppDetailsRow>
 
         <hr />

@@ -4,7 +4,7 @@ import AppDetails from "./AppDetails";
 import AppBuild from "./AppBuild";
 import AppImages from "./AppImages";
 
-export default function AppEdit() {
+export default function AppEdit({ appName }: { appName: string }) {
   return (
     <Tabs defaultValue="details">
       <TabsList>
@@ -14,15 +14,15 @@ export default function AppEdit() {
       </TabsList>
 
       <TabsContent value="details">
-        <AppDetails />
+        <AppDetails appName={appName} />
       </TabsContent>
 
       <TabsContent value="build">
-        <AppBuild />
+        <AppBuild appName={appName} />
       </TabsContent>
 
       <TabsContent value="images">
-        <AppImages />
+        <AppImages appName={appName} />
       </TabsContent>
     </Tabs>
   );

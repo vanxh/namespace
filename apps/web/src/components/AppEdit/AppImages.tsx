@@ -1,19 +1,6 @@
-import { File, Trash } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-import {
-  Input,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  Label,
-  Button,
-  RadioGroup,
-  RadioGroupItem,
-  Switch,
-} from "ui";
+import { Button } from "ui";
 
 const AppImagesRow = ({
   children,
@@ -40,7 +27,7 @@ const AppImagesRow = ({
   );
 };
 
-export default function AppImages() {
+export default function AppImages({ appName }: { appName: string }) {
   const [appType, setAppType] = useState<"android" | "web" | "ios">("android");
 
   const [logo, setLogo] = useState<string>();
@@ -55,7 +42,7 @@ export default function AppImages() {
           </p>
         </div>
 
-        <AppImagesRow label="Image Files">
+        <AppImagesRow label="App Logo">
           <div className="flex flex-col md:flex-row gap-y-4 items-start gap-x-4 justify-between w-full">
             {logo ? (
               <Image
@@ -72,6 +59,7 @@ export default function AppImages() {
               // TODO
               <></>
             )}
+
             <label
               htmlFor="dropzone-file"
               className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"

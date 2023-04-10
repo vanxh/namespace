@@ -39,7 +39,7 @@ const AppBuildRow = ({
   );
 };
 
-export default function AppBuild() {
+export default function AppBuild({ appName }: { appName: string }) {
   const [appType, setAppType] = useState<"android" | "web" | "ios">("android");
 
   const isAndroid = appType === "android";
