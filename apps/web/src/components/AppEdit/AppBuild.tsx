@@ -46,7 +46,11 @@ export default function AppBuild() {
   const isWeb = appType === "web";
   const isIOS = appType === "ios";
 
-  const [apk, setApk] = useState<File[]>([]);
+  const [apk, setApk] = useState<{
+    name: string;
+    size: number;
+    url: string;
+  }>();
 
   return (
     <div className="flex flex-col items-center justify-start w-full rounded-lg bg-white shadow-[0_20_20_60_#0000000D] overflow-hidden">
@@ -122,26 +126,27 @@ export default function AppBuild() {
                     drag and drop
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    SVG, PNG, JPG or GIF (MAX. 800x400px)
+                    APK
                   </p>
                 </div>
                 <input
                   id="dropzone-file"
                   type="file"
-                  // accept=".apk"
+                  accept=".apk"
                   className="hidden"
                   onChange={(e) => {
-                    if (!e.target.files) return;
-                    setApk(Array.prototype.slice.call(e.target.files));
+                    if (!e.target.files || !e.target.files[0]) return;
+                    setApk({
+                      name: e.target.files[0].name,
+                      size: e.target.files[0].size,
+                      url: URL.createObjectURL(e.target.files[0]),
+                    });
                   }}
                 />
               </label>
             </div>
-            {apk.map((a) => (
-              <div
-                key={a.name}
-                className="w-full h-full justify-center border border-[#2678FD] rounded-lg p-4 flex flex-col gap-y-3"
-              >
+            {apk && (
+              <div className="w-full h-full justify-center border border-[#2678FD] rounded-lg p-4 flex flex-col gap-y-3">
                 <div className="flex flex-row items-center justify-between">
                   <div className="flex flex-row gap-x-2 w-[80%]">
                     <div className="w-8 h-8 bg-[#EDF4FF] rounded-full flex items-center justify-center">
@@ -149,16 +154,16 @@ export default function AppBuild() {
                     </div>
 
                     <div className="flex flex-col gap-y-1 w-[70%]">
-                      <p className="font-medium text-sm truncate">{a.name}</p>
+                      <p className="font-medium text-sm truncate">{apk.name}</p>
                       <p className="text-sm text-[#475467]">
-                        {(a.size / 1024 / 1024).toFixed(2)}
+                        {(apk.size / 1024 / 1024).toFixed(2)}
                         MB
                       </p>
                     </div>
                   </div>
                   <button
                     onClick={() => {
-                      setApk((prev) => prev.filter((p) => p.name !== a.name));
+                      setApk(undefined);
                     }}
                     className="ease-in-out transition-all active:scale-90"
                   >
@@ -166,7 +171,7 @@ export default function AppBuild() {
                   </button>
                 </div>
               </div>
-            ))}
+            )}
 
             <br />
 

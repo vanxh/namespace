@@ -2,6 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "ui";
 
 import AppDetails from "./AppDetails";
 import AppBuild from "./AppBuild";
+import AppImages from "./AppImages";
 
 export default function AppEdit() {
   return (
@@ -20,7 +21,9 @@ export default function AppEdit() {
         <AppBuild />
       </TabsContent>
 
-      <TabsContent value="images">{/* TODO */}</TabsContent>
+      <TabsContent value="images">
+        <AppImages />
+      </TabsContent>
     </Tabs>
   );
 }
