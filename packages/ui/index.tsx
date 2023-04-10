@@ -6,3 +6,4 @@ export * from "./Label";
 export * from "./Dropdown";
 export * from "./Select";
 export * from "./Radio";
+export * from "./Switch";

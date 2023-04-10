@@ -11,6 +11,7 @@ import {
   Button,
   RadioGroup,
   RadioGroupItem,
+  Switch,
 } from "ui";
 
 const AppBuildRow = ({
@@ -204,7 +205,29 @@ export default function AppBuild() {
           </AppBuildRow>
         )}
 
-        {isWeb && <AppBuildRow label="Web">TODO</AppBuildRow>}
+        {isWeb && (
+          <AppBuildRow label="Web App">
+            <div className="flex flex-col gap-y-2">
+              <Label>
+                URL
+                <span className="text-red-500">*</span>
+              </Label>
+              <Input placeholder="https://bitpack.me" />
+            </div>
+
+            <div className="flex flex-col gap-y-2">
+              <Label>Optimized for mobile?</Label>
+              <Switch />
+            </div>
+
+            <div className="flex flex-col gap-y-2">
+              <Label>
+                Okay for meroku to make an installable of this web app?
+              </Label>
+              <Switch />
+            </div>
+          </AppBuildRow>
+        )}
 
         {isIOS && <AppBuildRow label="iOS">TODO</AppBuildRow>}
 
